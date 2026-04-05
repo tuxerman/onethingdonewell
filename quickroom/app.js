@@ -22,10 +22,12 @@
 const svgNS = 'http://www.w3.org/2000/svg';
 
 // ─── Theme constants ────────────────────────────────────────────────
-const FILL = '#f0f0f0';      // soft grey furniture fill
-const STROKE = '#3a3a3a';    // dark grey stroke (softer than black)
-const ACCENT = '#555';       // secondary details
-const CANVAS_BG = '#e2e2e2'; // canvas background
+// Using the "Carrot" base from https://htmlcolorcodes.com/color-chart/flat-design-color-chart/
+const FILL = '#FAE5D3';      // medium sage furniture fill
+const STROKE = '#E67E22';    // dim sage border — quiet, not diagrammatic
+const ACCENT = '#AF601A';    // secondary details
+const CANVAS_BG = '#e0e0e0'; // canvas background
+const WALL_T = 2;          // wall thickness in inches (expands outward)
 
 function svgEl(tag, attrs = {}) {
   const el = document.createElementNS(svgNS, tag);
@@ -34,15 +36,15 @@ function svgEl(tag, attrs = {}) {
 }
 
 function drawBed(g, w, h) {
-  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.45, rx: 1 }));
+  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.45 }));
   const pw = w * 0.85, ph = h * 0.15;
-  g.appendChild(svgEl('rect', { x: (w - pw) / 2, y: h * 0.03, width: pw, height: ph, fill: FILL, stroke: STROKE, 'stroke-width': 0.4, rx: 1 }));
+  g.appendChild(svgEl('rect', { x: (w - pw) / 2, y: h * 0.03, width: pw, height: ph, fill: FILL, stroke: STROKE, 'stroke-width': 0.4 }));
   g.appendChild(svgEl('line', { x1: w / 2, y1: h * 0.03, x2: w / 2, y2: h * 0.03 + ph, stroke: ACCENT, 'stroke-width': 0.5 }));
 }
 
 function drawChair(g, w, h) {
-  g.appendChild(svgEl('rect', { x: 0, y: h * 0.2, width: w, height: h * 0.8, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 1 }));
-  g.appendChild(svgEl('rect', { x: w * 0.05, y: 0, width: w * 0.9, height: h * 0.25, fill: FILL, stroke: STROKE, 'stroke-width': 0.4, rx: 1 }));
+  g.appendChild(svgEl('rect', { x: 0, y: h * 0.2, width: w, height: h * 0.8, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
+  g.appendChild(svgEl('rect', { x: w * 0.05, y: 0, width: w * 0.9, height: h * 0.25, fill: FILL, stroke: STROKE, 'stroke-width': 0.4 }));
 }
 
 function drawTable(g, w, h) {
@@ -50,7 +52,7 @@ function drawTable(g, w, h) {
 }
 
 function drawDesk(g, w, h) {
-  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 0.5 }));
+  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
   const dy = h * 0.75;
   g.appendChild(svgEl('line', { x1: 0, y1: dy, x2: w, y2: dy, stroke: ACCENT, 'stroke-width': 0.5 }));
   g.appendChild(svgEl('line', { x1: w / 2, y1: dy, x2: w / 2, y2: h, stroke: ACCENT, 'stroke-width': 0.5 }));
@@ -59,7 +61,7 @@ function drawDesk(g, w, h) {
 }
 
 function drawBookshelf(g, w, h) {
-  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 0.5 }));
+  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
   const sections = 4;
   for (let i = 1; i < sections; i++) {
     const x = (w / sections) * i;
@@ -68,7 +70,7 @@ function drawBookshelf(g, w, h) {
 }
 
 function drawWC(g, w, h) {
-  g.appendChild(svgEl('rect', { x: w * 0.1, y: 0, width: w * 0.8, height: h * 0.3, fill: FILL, stroke: STROKE, 'stroke-width': 0.45, rx: 1 }));
+  g.appendChild(svgEl('rect', { x: w * 0.1, y: 0, width: w * 0.8, height: h * 0.3, fill: FILL, stroke: STROKE, 'stroke-width': 0.45 }));
   g.appendChild(svgEl('ellipse', { cx: w / 2, cy: h * 0.65, rx: w / 2 - 0.5, ry: h * 0.35 - 0.5, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
   g.appendChild(svgEl('ellipse', { cx: w / 2, cy: h * 0.65, rx: w * 0.3, ry: h * 0.25, fill: FILL, stroke: ACCENT, 'stroke-width': 0.5 }));
 }
@@ -90,75 +92,75 @@ function drawArrow(g, w, h) {
 }
 
 function drawSofa(g, w, h) {
-  g.appendChild(svgEl('rect', { x: 0, y: h * 0.2, width: w, height: h * 0.8, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 2 }));
-  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h * 0.3, fill: FILL, stroke: STROKE, 'stroke-width': 0.4, rx: 2 }));
-  g.appendChild(svgEl('rect', { x: 0, y: h * 0.15, width: w * 0.08, height: h * 0.85, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 1 }));
-  g.appendChild(svgEl('rect', { x: w * 0.92, y: h * 0.15, width: w * 0.08, height: h * 0.85, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 1 }));
+  g.appendChild(svgEl('rect', { x: 0, y: h * 0.2, width: w, height: h * 0.8, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
+  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h * 0.3, fill: FILL, stroke: STROKE, 'stroke-width': 0.4 }));
+  g.appendChild(svgEl('rect', { x: 0, y: h * 0.15, width: w * 0.08, height: h * 0.85, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
+  g.appendChild(svgEl('rect', { x: w * 0.92, y: h * 0.15, width: w * 0.08, height: h * 0.85, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
   g.appendChild(svgEl('line', { x1: w * 0.33, y1: h * 0.3, x2: w * 0.33, y2: h, stroke: ACCENT, 'stroke-width': 0.3 }));
   g.appendChild(svgEl('line', { x1: w * 0.66, y1: h * 0.3, x2: w * 0.66, y2: h, stroke: ACCENT, 'stroke-width': 0.3 }));
 }
 
 function drawCoffeeTable(g, w, h) {
-  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 2 }));
-  g.appendChild(svgEl('rect', { x: 1.5, y: 1.5, width: w - 3, height: h - 3, fill: 'none', stroke: ACCENT, 'stroke-width': 0.3, rx: 1 }));
+  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
+  g.appendChild(svgEl('rect', { x: 1.5, y: 1.5, width: w - 3, height: h - 3, fill: 'none', stroke: ACCENT, 'stroke-width': 0.3 }));
 }
 
 function drawTVStand(g, w, h) {
-  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 1 }));
+  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
   g.appendChild(svgEl('line', { x1: 0, y1: h * 0.5, x2: w, y2: h * 0.5, stroke: ACCENT, 'stroke-width': 0.4 }));
   g.appendChild(svgEl('line', { x1: w * 0.33, y1: h * 0.5, x2: w * 0.33, y2: h, stroke: ACCENT, 'stroke-width': 0.3 }));
   g.appendChild(svgEl('line', { x1: w * 0.66, y1: h * 0.5, x2: w * 0.66, y2: h, stroke: ACCENT, 'stroke-width': 0.3 }));
 }
 
 function drawDiningTable(g, w, h) {
-  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 1 }));
+  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
   const inset = 2;
-  g.appendChild(svgEl('rect', { x: inset, y: inset, width: 2, height: 2, fill: STROKE, stroke: 'none', rx: 0.5 }));
-  g.appendChild(svgEl('rect', { x: w - inset - 2, y: inset, width: 2, height: 2, fill: STROKE, stroke: 'none', rx: 0.5 }));
-  g.appendChild(svgEl('rect', { x: inset, y: h - inset - 2, width: 2, height: 2, fill: STROKE, stroke: 'none', rx: 0.5 }));
-  g.appendChild(svgEl('rect', { x: w - inset - 2, y: h - inset - 2, width: 2, height: 2, fill: STROKE, stroke: 'none', rx: 0.5 }));
+  g.appendChild(svgEl('rect', { x: inset, y: inset, width: 2, height: 2, fill: STROKE, stroke: 'none' }));
+  g.appendChild(svgEl('rect', { x: w - inset - 2, y: inset, width: 2, height: 2, fill: STROKE, stroke: 'none' }));
+  g.appendChild(svgEl('rect', { x: inset, y: h - inset - 2, width: 2, height: 2, fill: STROKE, stroke: 'none' }));
+  g.appendChild(svgEl('rect', { x: w - inset - 2, y: h - inset - 2, width: 2, height: 2, fill: STROKE, stroke: 'none' }));
 }
 
 function drawDiningChair(g, w, h) {
-  g.appendChild(svgEl('rect', { x: 0, y: h * 0.25, width: w, height: h * 0.75, fill: FILL, stroke: STROKE, 'stroke-width': 0.45, rx: 1 }));
-  g.appendChild(svgEl('rect', { x: w * 0.1, y: 0, width: w * 0.8, height: h * 0.2, fill: FILL, stroke: STROKE, 'stroke-width': 0.4, rx: 1 }));
+  g.appendChild(svgEl('rect', { x: 0, y: h * 0.25, width: w, height: h * 0.75, fill: FILL, stroke: STROKE, 'stroke-width': 0.45 }));
+  g.appendChild(svgEl('rect', { x: w * 0.1, y: 0, width: w * 0.8, height: h * 0.2, fill: FILL, stroke: STROKE, 'stroke-width': 0.4 }));
 }
 
 function drawOfficeChair(g, w, h) {
   g.appendChild(svgEl('ellipse', { cx: w / 2, cy: h * 0.55, rx: w / 2 - 0.5, ry: h * 0.4, fill: FILL, stroke: STROKE, 'stroke-width': 0.45 }));
-  g.appendChild(svgEl('rect', { x: w * 0.15, y: 0, width: w * 0.7, height: h * 0.3, fill: FILL, stroke: STROKE, 'stroke-width': 0.4, rx: 2 }));
-  const cx = w / 2, cy = h * 0.55;
-  for (let i = 0; i < 5; i++) {
-    const angle = (i * 72 - 90) * Math.PI / 180;
-    const lx = cx + Math.cos(angle) * (w * 0.4);
-    const ly = cy + Math.sin(angle) * (h * 0.35);
-    g.appendChild(svgEl('line', { x1: cx, y1: cy, x2: lx, y2: ly, stroke: ACCENT, 'stroke-width': 0.3 }));
-    g.appendChild(svgEl('circle', { cx: lx, cy: ly, r: 0.8, fill: STROKE }));
-  }
+  g.appendChild(svgEl('rect', { x: w * 0.15, y: 0, width: w * 0.7, height: h * 0.3, fill: FILL, stroke: STROKE, 'stroke-width': 0.4 }));
+  // const cx = w / 2, cy = h * 0.55;
+  // for (let i = 0; i < 5; i++) {
+  //   const angle = (i * 72 - 90) * Math.PI / 180;
+  //   const lx = cx + Math.cos(angle) * (w * 0.4);
+  //   const ly = cy + Math.sin(angle) * (h * 0.35);
+  //   g.appendChild(svgEl('line', { x1: cx, y1: cy, x2: lx, y2: ly, stroke: ACCENT, 'stroke-width': 0.3 }));
+  //   g.appendChild(svgEl('circle', { cx: lx, cy: ly, r: 0.8, fill: STROKE }));
+  // }
 }
 
 function drawMonitor(g, w, h) {
-  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h * 0.7, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 0.5 }));
+  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h * 0.7, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
   g.appendChild(svgEl('rect', { x: w * 0.4, y: h * 0.7, width: w * 0.2, height: h * 0.15, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
   g.appendChild(svgEl('ellipse', { cx: w / 2, cy: h * 0.92, rx: w * 0.25, ry: h * 0.08, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
 }
 
 function drawNightstand(g, w, h) {
-  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 0.5 }));
+  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
   g.appendChild(svgEl('line', { x1: 0, y1: h * 0.5, x2: w, y2: h * 0.5, stroke: ACCENT, 'stroke-width': 0.4 }));
   g.appendChild(svgEl('circle', { cx: w / 2, cy: h * 0.25, r: 0.5, fill: STROKE }));
   g.appendChild(svgEl('circle', { cx: w / 2, cy: h * 0.75, r: 0.5, fill: STROKE }));
 }
 
 function drawWardrobe(g, w, h) {
-  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 0.5 }));
+  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
   g.appendChild(svgEl('line', { x1: w / 2, y1: 0, x2: w / 2, y2: h, stroke: ACCENT, 'stroke-width': 0.5 }));
   g.appendChild(svgEl('circle', { cx: w * 0.45, cy: h / 2, r: 0.6, fill: STROKE }));
   g.appendChild(svgEl('circle', { cx: w * 0.55, cy: h / 2, r: 0.6, fill: STROKE }));
 }
 
 function drawDoor(g, w, h) {
-  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: 'none' }));
+  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: 'transparent', stroke: 'none' }));
   g.appendChild(svgEl('line', { x1: 0, y1: h, x2: 0, y2: 0, stroke: STROKE, 'stroke-width': 0.5 }));
   g.appendChild(svgEl('path', { d: `M 0 0 A ${w} ${w} 0 0 1 ${w} ${h}`, fill: 'none', stroke: ACCENT, 'stroke-width': 0.5, 'stroke-dasharray': '2 1' }));
   g.appendChild(svgEl('line', { x1: 0, y1: 0, x2: w, y2: h, stroke: STROKE, 'stroke-width': 0.5 }));
@@ -272,14 +274,16 @@ function renderRooms() {
       'data-room-id': room.id,
       transform: `translate(${room.x}, ${room.y})`,
     });
-    g.appendChild(svgEl('rect', { class: 'room-outline', x: 0, y: 0, width: room.w, height: room.h }));
+    // Wall band expands outward; floor rect = exact specified dimensions
+    g.appendChild(svgEl('rect', { class: 'room-outline', x: -WALL_T, y: -WALL_T, width: room.w + 2 * WALL_T, height: room.h + 2 * WALL_T }));
+    g.appendChild(svgEl('rect', { class: 'room-floor', x: 0, y: 0, width: room.w, height: room.h }));
 
-    // Dimension labels
-    const dimTop = svgEl('text', { class: 'dim-label', 'text-anchor': 'middle', x: room.w / 2, y: -3, 'font-size': '4' });
+    // Dimension labels (outside the outer wall)
+    const dimTop = svgEl('text', { class: 'dim-label', 'text-anchor': 'middle', x: room.w / 2, y: -(WALL_T + 3), 'font-size': '4' });
     dimTop.textContent = fmtDim(room.w);
     g.appendChild(dimTop);
 
-    const dimLeft = svgEl('text', { class: 'dim-label', 'text-anchor': 'middle', x: -3, y: room.h / 2, transform: `rotate(-90, -3, ${room.h / 2})`, 'font-size': '4' });
+    const dimLeft = svgEl('text', { class: 'dim-label', 'text-anchor': 'middle', x: -(WALL_T + 3), y: room.h / 2, transform: `rotate(-90, ${-(WALL_T + 3)}, ${room.h / 2})`, 'font-size': '4' });
     dimLeft.textContent = fmtDim(room.h);
     g.appendChild(dimLeft);
 
@@ -327,16 +331,25 @@ function renderFurniture() {
       DRAW_FNS[item.type](g, item.w, item.h);
     }
 
-    // Hit area
-    g.appendChild(svgEl('rect', { x: 0, y: 0, width: item.w, height: item.h, fill: 'transparent', stroke: 'none' }));
+    // Hover overlay — semi-transparent warm tint, shown via CSS on :hover
+    g.appendChild(svgEl('rect', { class: 'furniture-hover-overlay', x: 0, y: 0, width: item.w, height: item.h, fill: 'transparent', stroke: 'none' }));
 
     // Label — counter-rotate so text never faces the lower hemisphere
     const displayName = item.label || FURNITURE_DEFS[item.type]?.label || item.type;
     const labelRot = ((item.rotation % 360) + 360) % 360;
-    const labelAttrs = { x: item.w / 2, y: item.h + 4, 'text-anchor': 'middle', 'font-size': '3', fill: '#666' };
-    if (labelRot > 90 && labelRot < 270) labelAttrs.transform = `rotate(180, ${item.w / 2}, ${item.h + 4})`;
+    const baseY = item.h + 4;
+    const labelAttrs = { x: item.w / 2, y: baseY, 'text-anchor': 'middle', 'font-size': '3', fill: '#555' };
+    if (labelRot > 90 && labelRot < 270) labelAttrs.transform = `rotate(180, ${item.w / 2}, ${baseY})`;
     const label = svgEl('text', labelAttrs);
-    label.textContent = `${displayName} (${Math.round(item.w)}×${Math.round(item.h)}")`;
+
+    const nameTspan = svgEl('tspan', { x: item.w / 2, dy: '0' });
+    nameTspan.textContent = displayName;
+    label.appendChild(nameTspan);
+
+    const dimTspan = svgEl('tspan', { x: item.w / 2, dy: '3.2', 'font-size': '2.3', fill: '#aaa' });
+    dimTspan.textContent = `${Math.round(item.w)}×${Math.round(item.h)}"`;
+    label.appendChild(dimTspan);
+
     g.appendChild(label);
 
     furnitureLayer.appendChild(g);
@@ -892,9 +905,12 @@ document.addEventListener('keydown', (e) => {
 // ─── Save / Load / Export ────────────────────────────────────────────
 
 $('#btn-save').addEventListener('click', () => {
+  const titleVal = ($('#layout-title').value || 'room-layout').trim();
   const data = {
     version: 3,
     unit: 'inches',
+    layoutName: titleVal,
+    view: { zoom: state.zoom, panX: state.pan.x, panY: state.pan.y },
     rooms: state.rooms.map(r => ({ x: r.x, y: r.y, w: r.w, h: r.h, label: r.label })),
     items: state.items.map(item => {
       const out = { type: item.type, x: +item.x.toFixed(2), y: +item.y.toFixed(2), w: +item.w.toFixed(2), h: +item.h.toFixed(2), rotation: item.rotation };
@@ -905,8 +921,8 @@ $('#btn-save').addEventListener('click', () => {
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
-  const titleVal = ($('#layout-title').value || 'room-layout').trim().replace(/[/\\?%*:|"<>]/g, '-');
-  const a = document.createElement('a'); a.href = url; a.download = titleVal + '.json'; a.click();
+  const filename = titleVal.replace(/[/\\?%*:|"<>]/g, '-') || 'room-layout';
+  const a = document.createElement('a'); a.href = url; a.download = filename + '.json'; a.click();
   URL.revokeObjectURL(url);
 });
 
@@ -929,6 +945,8 @@ $('#file-input').addEventListener('change', (e) => {
       }));
       state.nextId = off + state.items.length + 1;
       state.selectedKind = null; state.selectedId = null;
+      if (data.layoutName) $('#layout-title').value = data.layoutName;
+      if (data.view) { state.zoom = data.view.zoom || 1; state.pan.x = data.view.panX || 0; state.pan.y = data.view.panY || 0; }
       renderRooms(); renderFurniture(); renderViewport();
     } catch (err) { alert('Could not load file: the JSON is in the wrong format.'); }
   };

@@ -8,9 +8,9 @@
 :root {
   --color-black: #1a1a1a;
   --color-white: #ffffff;
-  --color-yellow: #f5c518;
-  --color-yellow-light: #fdf0b0;
-  --color-yellow-dark: #c9a200;
+  --color-yellow: #E67E22;
+  --color-yellow-light: #F5CBA7;
+  --color-yellow-dark: #CA6F1E;
   --color-gray-100: #f5f5f5;
   --color-gray-200: #e8e8e8;
   --color-gray-300: #d0d0d0;
@@ -436,24 +436,32 @@ html, body {
   cursor: move;
 }
 
-.room-item:hover > .room-outline {
-  stroke: var(--color-yellow-dark);
-}
 
-.room-item.selected > .room-outline {
+.room-item.selected > .room-floor {
   stroke: var(--color-yellow);
   stroke-width: 1;
 }
 
+/* Wall band — filled charcoal, no border needed */
 .room-outline {
-  fill: #fafafa;
-  stroke: #3a3a3a;
-  stroke-width: 0.5;
+  fill: #5a5a5a;
+  stroke: none;
+}
+
+/* Warm paper floor inside the walls */
+.room-floor {
+  fill: #fdf8f3;
 }
 
 /* Furniture items on canvas */
 .furniture-item {
   cursor: move;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.1));
+}
+
+.furniture-item:hover,
+.furniture-item.selected {
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.22));
 }
 
 .furniture-item.selected > .selection-outline {
