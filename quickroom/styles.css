@@ -1,0 +1,539 @@
+/* === Reset & Base === */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-black: #1a1a1a;
+  --color-white: #ffffff;
+  --color-yellow: #f5c518;
+  --color-yellow-light: #fdf0b0;
+  --color-yellow-dark: #c9a200;
+  --color-gray-100: #f5f5f5;
+  --color-gray-200: #e8e8e8;
+  --color-gray-300: #d0d0d0;
+  --color-gray-500: #888;
+  --sidebar-width: 220px;
+  --toolbar-height: 48px;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  color: var(--color-black);
+  background: var(--color-gray-100);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* === Toolbar === */
+#toolbar {
+  display: flex;
+  align-items: center;
+  height: var(--toolbar-height);
+  padding: 0 12px;
+  background: var(--color-black);
+  color: var(--color-white);
+  flex-shrink: 0;
+}
+
+.app-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--color-yellow);
+  letter-spacing: 0.5px;
+}
+
+.toolbar-left, .toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.toolbar-right {
+  justify-content: flex-end;
+}
+
+.toolbar-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.layout-title-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  border: 1px solid var(--color-gray-500);
+  border-radius: 3px;
+  padding: 0 8px;
+  transition: border-color 0.15s, background 0.15s;
+  box-sizing: border-box;
+}
+
+.layout-title-group:hover {
+  border-color: var(--color-gray-300);
+}
+
+.layout-title-group:focus-within {
+  border-color: var(--color-yellow);
+  background: var(--color-white);
+}
+
+.layout-title-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-gray-500);
+  white-space: nowrap;
+  user-select: none;
+  line-height: 1;
+}
+
+.layout-title-input {
+  background: transparent;
+  border: none;
+  color: var(--color-white);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  height: 20px;
+  line-height: 20px;
+  min-width: 100px;
+  max-width: 240px;
+  font-family: inherit;
+  transition: color 0.15s;
+  display: block;
+  box-shadow: none;
+}
+
+.layout-title-group:focus-within .layout-title-input {
+  color: var(--color-black);
+  cursor: text;
+  background: transparent;
+}
+
+/* Override milligram's default input styles inside the toolbar */
+#toolbar input,
+#toolbar input:focus {
+  margin-bottom: 0;
+  box-shadow: none;
+}
+
+#toolbar input.layout-title-input,
+#toolbar input.layout-title-input:focus {
+  border: none;
+  border-radius: 0;
+  outline: none;
+}
+
+#toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--color-gray-300);
+  margin: 0;
+}
+
+#toolbar input[type="number"] {
+  width: 60px;
+  height: 28px;
+  padding: 2px 6px;
+  margin: 0;
+  border: 1px solid var(--color-gray-500);
+  border-radius: 3px;
+  background: var(--color-black);
+  color: var(--color-white);
+  font-size: 12px;
+  text-align: center;
+}
+
+#toolbar input[type="number"]:focus {
+  border-color: var(--color-yellow);
+  outline: none;
+}
+
+#toolbar button {
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--color-yellow);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--color-yellow);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  margin: 0;
+  line-height: 1;
+}
+
+#toolbar button:hover {
+  background: var(--color-yellow);
+  color: var(--color-black);
+}
+
+.toolbar-sep {
+  width: 1px;
+  height: 24px;
+  background: var(--color-gray-500);
+  margin: 0 4px;
+}
+
+/* === Main Layout === */
+#main {
+  display: flex;
+  height: calc(100vh - var(--toolbar-height));
+}
+
+/* === Sidebar === */
+#sidebar {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  background: var(--color-white);
+  border-right: 1px solid var(--color-gray-200);
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+#sidebar h3 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--color-yellow);
+  letter-spacing: 0.3px;
+}
+
+#sidebar h4 {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--color-gray-500);
+  margin: 8px 0 4px;
+}
+
+.palette-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.palette-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 4px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 4px;
+  cursor: grab;
+  transition: border-color 0.15s, background 0.15s;
+  user-select: none;
+}
+
+.palette-item:hover {
+  border-color: var(--color-yellow);
+  background: var(--color-yellow-light);
+}
+
+.palette-item:active {
+  cursor: grabbing;
+}
+
+.palette-svg {
+  width: 48px;
+  height: 36px;
+}
+
+.palette-item span {
+  font-size: 10px;
+  color: var(--color-gray-500);
+  font-weight: 500;
+}
+
+/* === Floating Context Panel (right side of canvas) === */
+#context-panel {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 190px;
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 6px;
+  padding: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+  z-index: 10;
+}
+
+#context-panel h4 {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-black);
+  margin: 0 0 8px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--color-yellow);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.context-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.context-fields label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--color-gray-500);
+  margin: 0;
+}
+
+.context-fields input[type="number"],
+.context-fields input[type="text"] {
+  width: 75px;
+  height: 24px;
+  padding: 2px 4px;
+  margin: 0;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 3px;
+  font-size: 11px;
+  text-align: center;
+}
+
+.context-fields input:focus {
+  border-color: var(--color-yellow);
+  outline: none;
+}
+
+.context-actions {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.context-actions button {
+  flex: 1;
+  min-width: 0;
+  height: 26px;
+  padding: 0 3px;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 3px;
+  background: var(--color-white);
+  color: var(--color-black);
+  font-size: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.context-actions button:hover {
+  border-color: var(--color-yellow);
+  background: var(--color-yellow-light);
+}
+
+#ctx-delete:hover {
+  border-color: #e74c3c;
+  background: #fce4e4;
+  color: #c0392b;
+}
+
+/* === Floating Zoom Controls === */
+#zoom-controls {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-300);
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  overflow: hidden;
+}
+
+#zoom-controls button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--color-black);
+  font-size: 18px;
+  font-weight: 400;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s;
+  line-height: 1;
+  padding: 0;
+  margin: 0;
+}
+
+#zoom-controls button:hover {
+  background: var(--color-gray-200);
+}
+
+#zoom-level {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-gray-500);
+  width: 32px;
+  text-align: center;
+  padding: 2px 0;
+  border-top: 1px solid var(--color-gray-200);
+  border-bottom: 1px solid var(--color-gray-200);
+  user-select: none;
+}
+
+/* === Canvas === */
+#canvas-container {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  background: #e2e2e2;
+  cursor: default;
+}
+
+#canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Dimension labels (SVG units = inches, so font-size is in inches) */
+.dim-label {
+  font-family: inherit;
+  fill: var(--color-black);
+  font-weight: 500;
+}
+
+/* Room rectangles on canvas */
+.room-item {
+  cursor: move;
+}
+
+.room-item:hover > .room-outline {
+  stroke: var(--color-yellow-dark);
+}
+
+.room-item.selected > .room-outline {
+  stroke: var(--color-yellow);
+  stroke-width: 1;
+}
+
+.room-outline {
+  fill: #fafafa;
+  stroke: #3a3a3a;
+  stroke-width: 0.5;
+}
+
+/* Furniture items on canvas */
+.furniture-item {
+  cursor: move;
+}
+
+.furniture-item.selected > .selection-outline {
+  stroke: var(--color-yellow);
+  stroke-width: 0.5;
+  stroke-dasharray: 2 1;
+  fill: none;
+  pointer-events: none;
+}
+
+/* Resize handles */
+.resize-handle {
+  fill: var(--color-yellow);
+  stroke: var(--color-black);
+  stroke-width: 0.3;
+}
+
+/* Rotation handle */
+.rotate-handle {
+  fill: var(--color-white);
+  stroke: var(--color-yellow);
+  stroke-width: 0.4;
+  cursor: grab;
+}
+
+.rotate-handle:hover {
+  fill: var(--color-yellow-light);
+}
+
+.rotate-handle-line {
+  stroke: var(--color-yellow);
+  stroke-width: 0.3;
+  stroke-dasharray: 1 1;
+}
+
+/* Right-click context menu */
+#ctx-menu {
+  position: absolute;
+  z-index: 20;
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.14);
+  padding: 4px 0;
+  min-width: 140px;
+}
+
+#ctx-menu button {
+  display: block;
+  width: 100%;
+  padding: 6px 14px;
+  border: none;
+  background: none;
+  color: var(--color-black);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+#ctx-menu button:hover {
+  background: var(--color-yellow-light);
+}
+
+#ctx-menu button[data-action="delete"]:hover {
+  background: #fce4e4;
+  color: #c0392b;
+}
+
+/* Scrollbar styling for sidebar */
+#sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+#sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+  background: var(--color-gray-300);
+  border-radius: 3px;
+}
