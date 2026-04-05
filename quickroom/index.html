@@ -267,13 +267,9 @@
     <div id="canvas-container">
       <svg id="canvas" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <!-- Grid pattern (1 inch = 1 unit; small grid = 1 in, large grid = 12 in = 1 ft) -->
-          <pattern id="grid-small" width="1" height="1" patternUnits="userSpaceOnUse">
-            <path d="M 1 0 L 0 0 0 1" fill="none" stroke="#d4d4d4" stroke-width="0.15"/>
-          </pattern>
+          <!-- Grid pattern: dots at every foot (12 in) intersection -->
           <pattern id="grid-large" width="12" height="12" patternUnits="userSpaceOnUse">
-            <rect width="12" height="12" fill="url(#grid-small)"/>
-            <path d="M 12 0 L 0 0 0 12" fill="none" stroke="#bbb" stroke-width="0.3"/>
+            <circle cx="0" cy="0" r="0.6" fill="#222222"/>
           </pattern>
 
           <!-- Arrowhead marker for canvas arrows -->
@@ -290,6 +286,10 @@
           <rect id="grid-rect" x="-5000" y="-5000" width="10000" height="10000" fill="url(#grid-large)"/>
           <g id="rooms-layer"></g>
           <g id="furniture-layer"></g>
+          <g id="labels-layer">
+            <g id="room-labels-layer"></g>
+            <g id="furniture-labels-layer"></g>
+          </g>
           <g id="handles-layer"></g>
         </g>
       </svg>

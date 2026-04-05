@@ -236,6 +236,9 @@ const canvas = $('#canvas');
 const viewport = $('#viewport');
 const roomsLayer = $('#rooms-layer');
 const furnitureLayer = $('#furniture-layer');
+const labelsLayer = $('#labels-layer');
+const roomLabelsLayer = $('#room-labels-layer');
+const furnitureLabelsLayer = $('#furniture-labels-layer');
 const handlesLayer = $('#handles-layer');
 const canvasContainer = $('#canvas-container');
 const contextPanel = $('#context-panel');
@@ -265,8 +268,93 @@ function renderViewport() {
   $('#zoom-level').textContent = Math.round(zoom * 100 / 3) + '%'; // normalize: zoom=3 → 100%
 }
 
+// ─── Label collision resolution ──────────────────────────────────────
+// After labels are placed at their default positions, nudge any that
+// overlap so every label remains readable.  Priority: room names >
+// room dimensions > furniture labels.  Lower-priority labels move.
+
+function resolveCollisions() {
+  const PAD = 1.5;                // min gap between labels (SVG units)
+  const MAX_ITER = 4;             // iterations of the nudge loop
+
+  // Collect every <text> in the labels layer with its screen bbox
+  const entries = [];
+  labelsLayer.querySelectorAll('text').forEach(el => {
+    try {
+      const bbox = el.getBBox();
+      if (bbox.width === 0 && bbox.height === 0) return;
+      // Determine priority: room names (highest) > dim labels > furniture
+      let priority = 0;                                     // furniture label
+      if (el.classList.contains('dim-label')) priority = 1;  // room dimension
+      const parentG = el.closest('.room-labels');
+      if (parentG && !el.classList.contains('dim-label')) priority = 2; // room name
+
+      // Get the cumulative transform so we work in viewport coordinates
+      const ctm = el.getCTM();
+      const svgRoot = canvas;
+      const rootCTM = svgRoot.getCTM();
+      if (!ctm || !rootCTM) return;
+      // Transform bbox corners to viewport space
+      const pt = svgRoot.createSVGPoint();
+      pt.x = bbox.x; pt.y = bbox.y;
+      const tl = pt.matrixTransform(ctm).matrixTransform(rootCTM.inverse());
+      pt.x = bbox.x + bbox.width; pt.y = bbox.y + bbox.height;
+      const br = pt.matrixTransform(ctm).matrixTransform(rootCTM.inverse());
+
+      entries.push({
+        el,
+        priority,
+        x: Math.min(tl.x, br.x), y: Math.min(tl.y, br.y),
+        w: Math.abs(br.x - tl.x), h: Math.abs(br.y - tl.y),
+        nudgeY: 0,
+      });
+    } catch (_) { /* getBBox can throw for hidden elements */ }
+  });
+
+  // Iterative pairwise nudge — lower-priority labels pushed down
+  for (let iter = 0; iter < MAX_ITER; iter++) {
+    let moved = false;
+    for (let i = 0; i < entries.length; i++) {
+      for (let j = i + 1; j < entries.length; j++) {
+        const a = entries[i], b = entries[j];
+        // AABB overlap check (with padding)
+        const ox = Math.min(a.x + a.w + PAD, b.x + b.w + PAD) - Math.max(a.x - PAD, b.x - PAD);
+        const oy = Math.min(a.y + a.h + PAD, b.y + b.h + PAD) - Math.max(a.y - PAD, b.y - PAD);
+        if (ox <= 0 || oy <= 0) continue;  // no overlap
+
+        // Push the lower-priority one (or the later one if tied) downward
+        const loser = a.priority <= b.priority ? a : b;
+        // If same priority, push the one that's lower on screen
+        const mover = a.priority === b.priority ? (a.y > b.y ? a : b) : loser;
+
+        mover.y += oy + PAD;
+        mover.nudgeY += oy + PAD;
+        moved = true;
+      }
+    }
+    if (!moved) break;
+  }
+
+  // Apply accumulated nudges via a translate on each text element
+  for (const e of entries) {
+    if (e.nudgeY === 0) continue;
+    // We need to convert the viewport-space nudge back into the text's local coordinate space
+    // Since transforms may include rotation, we approximate by using the CTM scale factor
+    const ctm = e.el.getCTM();
+    const rootCTM = canvas.getCTM();
+    if (!ctm || !rootCTM) continue;
+    const localCTM = rootCTM.inverse().multiply(ctm);
+    // The y-scale factor tells us how to convert viewport units → local units
+    const scaleY = Math.sqrt(localCTM.b * localCTM.b + localCTM.d * localCTM.d);
+    const localNudge = e.nudgeY / scaleY;
+    const curY = parseFloat(e.el.getAttribute('y') || 0);
+    e.el.setAttribute('y', curY + localNudge);
+  }
+}
+
 function renderRooms() {
   roomsLayer.innerHTML = '';
+  roomLabelsLayer.innerHTML = '';
   for (const room of state.rooms) {
     const isSelected = state.selectedKind === 'room' && state.selectedId === room.id;
     const g = svgEl('g', {
@@ -278,21 +366,47 @@ function renderRooms() {
     g.appendChild(svgEl('rect', { class: 'room-outline', x: -WALL_T, y: -WALL_T, width: room.w + 2 * WALL_T, height: room.h + 2 * WALL_T }));
     g.appendChild(svgEl('rect', { class: 'room-floor', x: 0, y: 0, width: room.w, height: room.h }));
 
-    // Dimension labels (outside the outer wall)
+    // Interior foot-inch grid aligned to room origin
+    const gridG = svgEl('g', { class: 'room-grid', 'pointer-events': 'none' });
+    // Clip to room bounds
+    const clipId = 'room-clip-' + room.id;
+    const clipPath = svgEl('clipPath', { id: clipId });
+    clipPath.appendChild(svgEl('rect', { x: 0, y: 0, width: room.w, height: room.h }));
+    gridG.appendChild(clipPath);
+    const gridInner = svgEl('g', { 'clip-path': `url(#${clipId})` });
+    // Inch lines (vertical then horizontal)
+    let d = '';
+    for (let x = 1; x < room.w; x++) d += `M${x},0V${room.h}`;
+    for (let y = 1; y < room.h; y++) d += `M0,${y}H${room.w}`;
+    if (d) gridInner.appendChild(svgEl('path', { d, fill: 'none', stroke: '#e8e4e0', 'stroke-width': '0.08' }));
+    // Foot lines
+    let dFt = '';
+    for (let x = 12; x < room.w; x += 12) dFt += `M${x},0V${room.h}`;
+    for (let y = 12; y < room.h; y += 12) dFt += `M0,${y}H${room.w}`;
+    if (dFt) gridInner.appendChild(svgEl('path', { d: dFt, fill: 'none', stroke: '#ddd8d3', 'stroke-width': '0.18' }));
+    gridG.appendChild(gridInner);
+    g.appendChild(gridG);
+
+    roomsLayer.appendChild(g);
+
+    // Labels rendered in a separate top layer so they aren't occluded
+    const lg = svgEl('g', { transform: `translate(${room.x}, ${room.y})`, class: 'room-labels', 'pointer-events': 'none' });
+
     const dimTop = svgEl('text', { class: 'dim-label', 'text-anchor': 'middle', x: room.w / 2, y: -(WALL_T + 3), 'font-size': '4' });
     dimTop.textContent = fmtDim(room.w);
-    g.appendChild(dimTop);
+    lg.appendChild(dimTop);
 
     const dimLeft = svgEl('text', { class: 'dim-label', 'text-anchor': 'middle', x: -(WALL_T + 3), y: room.h / 2, transform: `rotate(-90, ${-(WALL_T + 3)}, ${room.h / 2})`, 'font-size': '4' });
     dimLeft.textContent = fmtDim(room.h);
-    g.appendChild(dimLeft);
+    lg.appendChild(dimLeft);
 
-    const label = svgEl('text', { x: 3, y: 7, 'font-size': '4', fill: '#666', 'font-family': 'inherit' });
-    label.textContent = room.label || '';
-    g.appendChild(label);
+    const label = svgEl('text', { x: 3, y: 7, 'font-size': '4.5', fill: '#555', 'font-weight': '600', 'font-family': 'inherit', 'letter-spacing': '0.5' });
+    label.textContent = (room.label || '').toUpperCase();
+    lg.appendChild(label);
 
-    roomsLayer.appendChild(g);
+    roomLabelsLayer.appendChild(lg);
   }
+  resolveCollisions();
 }
 
 function fmtDim(inches) {
@@ -305,6 +419,7 @@ function fmtDim(inches) {
 
 function renderFurniture() {
   furnitureLayer.innerHTML = '';
+  furnitureLabelsLayer.innerHTML = '';
   for (const item of state.items) {
     const isSelected = state.selectedKind === 'item' && state.selectedId === item.id;
     const g = svgEl('g', {
@@ -334,7 +449,9 @@ function renderFurniture() {
     // Hover overlay — semi-transparent warm tint, shown via CSS on :hover
     g.appendChild(svgEl('rect', { class: 'furniture-hover-overlay', x: 0, y: 0, width: item.w, height: item.h, fill: 'transparent', stroke: 'none' }));
 
-    // Label — counter-rotate so text never faces the lower hemisphere
+    furnitureLayer.appendChild(g);
+
+    // Label rendered in labels layer so it's never occluded by other furniture/rooms
     const displayName = item.label || FURNITURE_DEFS[item.type]?.label || item.type;
     const labelRot = ((item.rotation % 360) + 360) % 360;
     const baseY = item.h + 4;
@@ -350,10 +467,15 @@ function renderFurniture() {
     dimTspan.textContent = `${Math.round(item.w)}×${Math.round(item.h)}"`;
     label.appendChild(dimTspan);
 
-    g.appendChild(label);
-
-    furnitureLayer.appendChild(g);
+    const lg = svgEl('g', {
+      transform: `translate(${item.x}, ${item.y}) rotate(${item.rotation}, ${item.w / 2}, ${item.h / 2})`,
+      class: 'furniture-labels',
+      'pointer-events': 'none',
+    });
+    lg.appendChild(label);
+    furnitureLabelsLayer.appendChild(lg);
   }
+  resolveCollisions();
   renderHandles();
   renderContextPanel();
 }
