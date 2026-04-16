@@ -8,7 +8,7 @@
       integrity="sha512-xiunq9hpKsIcz42zt0o2vCo34xV0j6Ny8hgEylN3XBglZDtTZ2nwnqF/Z/TTCc18sGdvCjbFInNd++6q3J0N6g=="
       crossorigin="anonymous" referrerpolicy="no-referrer">
   <link rel="stylesheet" href="styles.css">
-  <link rel="icon" href="data:,">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
 </head>
 <body>
   <!-- Top Toolbar -->
@@ -296,37 +296,50 @@
 
       <!-- Floating context panel (right side of canvas) -->
       <div id="context-panel" class="hidden">
-        <h4>Selected Item</h4>
-        <div class="context-fields">
-          <label>Name:
-            <input type="text" id="ctx-name" placeholder="Name">
-          </label>
-          <label>Width (in):
-            <input type="number" id="ctx-width" min="1" step="1">
-          </label>
-          <label>Height (in):
-            <input type="number" id="ctx-height" min="1" step="1">
-          </label>
-          <label>X:
-            <input type="number" id="ctx-x" step="1">
-          </label>
-          <label>Y:
-            <input type="number" id="ctx-y" step="1">
-          </label>
-          <label>Rotation:
-            <input type="number" id="ctx-rotation" min="0" max="359" step="1"> °
-          </label>
-          <label id="ctx-text-label" class="hidden">Text:
-            <input type="text" id="ctx-text" placeholder="Label">
-          </label>
-          <label id="ctx-fontsize-label" class="hidden">Font size:
-            <input type="number" id="ctx-fontsize" min="8" max="200" step="1">
-          </label>
+        <!-- Single item view -->
+        <div id="ctx-single">
+          <h4>Selected Item</h4>
+          <div class="context-fields">
+            <label>Name:
+              <input type="text" id="ctx-name" placeholder="Name">
+            </label>
+            <label>Width (in):
+              <input type="number" id="ctx-width" min="1" step="1">
+            </label>
+            <label>Height (in):
+              <input type="number" id="ctx-height" min="1" step="1">
+            </label>
+            <label>X:
+              <input type="number" id="ctx-x" step="1">
+            </label>
+            <label>Y:
+              <input type="number" id="ctx-y" step="1">
+            </label>
+            <label>Rotation:
+              <input type="number" id="ctx-rotation" min="0" max="359" step="1"> °
+            </label>
+            <label id="ctx-text-label" class="hidden">Text:
+              <input type="text" id="ctx-text" placeholder="Label">
+            </label>
+            <label id="ctx-fontsize-label" class="hidden">Font size:
+              <input type="number" id="ctx-fontsize" min="8" max="200" step="1">
+            </label>
+          </div>
+          <div class="context-actions">
+            <button id="ctx-rotate" title="Rotate 90°">↻ Rotate 90°</button>
+            <button id="ctx-duplicate" title="Duplicate">⧉ Duplicate</button>
+            <button id="ctx-delete" title="Delete">✕ Delete</button>
+          </div>
         </div>
-        <div class="context-actions">
-          <button id="ctx-rotate" title="Rotate 90°">↻ 90°</button>
-          <button id="ctx-duplicate" title="Duplicate">⧉ Dup</button>
-          <button id="ctx-delete" title="Delete">✕ Del</button>
+
+        <!-- Multi item view -->
+        <div id="ctx-multi" class="hidden">
+          <h4 id="ctx-multi-title">Selected Items</h4>
+          <div id="ctx-multi-names" class="context-multi-names"></div>
+          <div class="context-actions">
+            <button id="ctx-rotate-all">↻ Rotate All</button>
+            <button id="ctx-delete-all">✕ Delete All</button>
+          </div>
         </div>
       </div>
 

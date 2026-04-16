@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Room outline -->
+  <rect x="8" y="16" width="48" height="36" rx="2" ry="2" fill="#FFFFFF" stroke="#A259FF" stroke-width="3"/>
+  <!-- Interior wall / divider -->
+  <line x1="31" y1="16" x2="31" y2="52" stroke="#A259FF" stroke-width="2" stroke-dasharray="4,4"/>
+  <!-- Small furniture rect left room -->
+  <rect x="13" y="20" width="14" height="18" rx="1" fill="#A259FF" opacity="0.5"/>
+  <!-- Small furniture rect right room -->
+  <circle cx="43" cy="39" r="8" rx="1" fill="#A259FF" opacity="0.5"/>
+</svg>

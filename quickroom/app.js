@@ -223,6 +223,7 @@ const state = {
   items: [],
   selectedKind: null,
   selectedId: null,
+  selectedIds: [],  // for multi-selection
   nextId: 2,
   dragging: null,
   panning: null,
@@ -421,7 +422,8 @@ function renderFurniture() {
   furnitureLayer.innerHTML = '';
   furnitureLabelsLayer.innerHTML = '';
   for (const item of state.items) {
-    const isSelected = state.selectedKind === 'item' && state.selectedId === item.id;
+    const isSelected = (state.selectedKind === 'item' && state.selectedId === item.id) ||
+                       (state.selectedKind === 'multi' && state.selectedIds.includes(item.id));
     const g = svgEl('g', {
       class: 'furniture-item' + (isSelected ? ' selected' : ''),
       'data-id': item.id,
@@ -484,6 +486,7 @@ function renderFurniture() {
 
 function renderHandles() {
   handlesLayer.innerHTML = '';
+  if (state.selectedKind === 'multi') return;
   const sel = getSelected();
   if (!sel) return;
 
@@ -552,6 +555,31 @@ function renderHandles() {
 }
 
 function renderContextPanel() {
+  if (state.selectedKind === 'multi' && state.selectedIds.length > 0) {
+    contextPanel.classList.remove('hidden');
+    $('#ctx-single').classList.add('hidden');
+    $('#ctx-multi').classList.remove('hidden');
+
+    const count = state.selectedIds.length;
+    $('#ctx-multi-title').textContent = `${count} Selected Item${count !== 1 ? 's' : ''}`;
+
+    const namesEl = $('#ctx-multi-names');
+    namesEl.innerHTML = '';
+    for (const id of state.selectedIds) {
+      const item = getItem(id);
+      if (!item) continue;
+      const name = item.label || FURNITURE_DEFS[item.type]?.label || item.type;
+      const div = document.createElement('div');
+      div.className = 'context-multi-name-item';
+      div.textContent = name;
+      namesEl.appendChild(div);
+    }
+    return;
+  }
+
+  $('#ctx-single').classList.remove('hidden');
+  $('#ctx-multi').classList.add('hidden');
+
   const sel = getSelected();
   if (!sel) { contextPanel.classList.add('hidden'); return; }
   contextPanel.classList.remove('hidden');
@@ -634,16 +662,67 @@ function deleteSelected() {
 }
 
 function selectItem(id) {
-  state.selectedKind = 'item'; state.selectedId = id;
+  state.selectedKind = 'item'; state.selectedId = id; state.selectedIds = [];
   renderRooms(); renderFurniture();
 }
 function selectRoom(id) {
-  state.selectedKind = 'room'; state.selectedId = id;
+  state.selectedKind = 'room'; state.selectedId = id; state.selectedIds = [];
   renderRooms(); renderFurniture(); renderHandles(); renderContextPanel();
 }
 function deselectAll() {
-  state.selectedKind = null; state.selectedId = null;
+  state.selectedKind = null; state.selectedId = null; state.selectedIds = [];
   renderRooms(); renderFurniture();
+}
+
+function toggleItemSelection(id) {
+  // Build pool from current selection
+  let pool = state.selectedKind === 'multi' ? [...state.selectedIds]
+           : state.selectedKind === 'item'  ? [state.selectedId]
+           : [];
+
+  const idx = pool.indexOf(id);
+  if (idx >= 0) {
+    pool.splice(idx, 1);
+  } else {
+    pool.push(id);
+  }
+
+  if (pool.length === 0) {
+    state.selectedKind = null; state.selectedId = null; state.selectedIds = [];
+  } else if (pool.length === 1) {
+    state.selectedKind = 'item'; state.selectedId = pool[0]; state.selectedIds = [];
+  } else {
+    state.selectedKind = 'multi'; state.selectedId = null; state.selectedIds = pool;
+  }
+  renderRooms(); renderFurniture();
+}
+
+function rotateGroup() {
+  const items = state.selectedIds.map(id => getItem(id)).filter(Boolean);
+  if (items.length === 0) return;
+
+  // Centroid of all item visual centers
+  const cx = items.reduce((s, i) => s + i.x + i.w / 2, 0) / items.length;
+  const cy = items.reduce((s, i) => s + i.y + i.h / 2, 0) / items.length;
+
+  // Rotate each item's center 90° clockwise around the centroid, then rotate the item itself
+  for (const item of items) {
+    const dx = (item.x + item.w / 2) - cx;
+    const dy = (item.y + item.h / 2) - cy;
+    // 90° clockwise in screen coords (y-down): (dx, dy) → (-dy, dx)
+    const newDx = -dy;
+    const newDy =  dx;
+    item.x = cx + newDx - item.w / 2;
+    item.y = cy + newDy - item.h / 2;
+    item.rotation = (item.rotation + 90) % 360;
+  }
+  renderFurniture();
+}
+
+function deleteGroup() {
+  state.items = state.items.filter(i => !state.selectedIds.includes(i.id));
+  state.selectedKind = null; state.selectedId = null; state.selectedIds = [];
+  renderFurniture();
 }
 
 // ─── Room Snapping ───────────────────────────────────────────────────
@@ -746,6 +825,10 @@ canvas.addEventListener('mousedown', (e) => {
   const itemEl = e.target.closest('.furniture-item');
   if (itemEl) {
     const id = parseInt(itemEl.dataset.id, 10);
+    if (e.shiftKey) {
+      toggleItemSelection(id);
+      return;
+    }
     selectItem(id);
     const item = getItem(id);
     if (!item) return;
@@ -989,6 +1072,8 @@ $('#ctx-fontsize').addEventListener('change', () => {
 $('#ctx-rotate').addEventListener('click', () => { if (state.selectedKind === 'item' && state.selectedId) rotateItem90(state.selectedId); });
 $('#ctx-duplicate').addEventListener('click', () => { if (state.selectedId) duplicateSelected(); });
 $('#ctx-delete').addEventListener('click', () => { if (state.selectedId) deleteSelected(); });
+$('#ctx-rotate-all').addEventListener('click', () => rotateGroup());
+$('#ctx-delete-all').addEventListener('click', () => deleteGroup());
 
 canvas.addEventListener('dblclick', (e) => {
   const itemEl = e.target.closest('.furniture-item');
@@ -996,12 +1081,17 @@ canvas.addEventListener('dblclick', (e) => {
   const id = parseInt(itemEl.dataset.id, 10);
   const item = getItem(id); if (!item) return;
   selectItem(id);
-  if (item.type === 'text') { $('#ctx-text').focus(); $('#ctx-text').select(); }
-  else { $('#ctx-width').focus(); $('#ctx-width').select(); }
+  $('#ctx-name').focus(); $('#ctx-name').select();
 });
 
 document.addEventListener('keydown', (e) => {
   if (e.target.tagName === 'INPUT') return;
+  if (state.selectedKind === 'multi') {
+    if (e.key === 'Delete' || e.key === 'Backspace') { deleteGroup(); return; }
+    if (e.key === 'Escape') { deselectAll(); return; }
+    if (e.key === 'r' || e.key === 'R') { rotateGroup(); return; }
+    return;
+  }
   if (state.selectedId) {
     const sel = getSelected(); if (!sel) return;
     if (e.key === 'Delete' || e.key === 'Backspace') { deleteSelected(); return; }
