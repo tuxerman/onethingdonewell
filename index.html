@@ -1,15 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>One Thing Done Well</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One Thing Done Well</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;500&family=Fira+Sans:wght@400&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background: #fff;
+      color: #000;
+      font-size: 15px;
+      font-family: 'Fira Sans', sans-serif;
+      font-weight: 400;
+    }
+
+    h1 {
+      font-family: "Barlow", sans-serif;
+      font-optical-sizing: auto;
+      font-weight: 300;
+      color: #000;
+    }
+
+    h2, h3 {
+      font-family: "Barlow", sans-serif;
+      font-optical-sizing: auto;
+      font-weight: 300;
+      color: #000;
+      transition: color 0.5s ease;
+    }
+
+    h5, h6 {
+      font-family: "Barlow", sans-serif;
+      font-optical-sizing: auto;
+      font-weight: 500;
+      color: #000;
+      text-transform: uppercase;
+      transition: color 0.5s ease;
+    }
+
+    a {
+      color: #000;
+      transition: background-color 0.5s, color 0.5s ease;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: #A259FF;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 4rem;
+      padding: 3rem 2rem;
+      background-color: #EFEFEF;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: #000;
+    }
+
+    /* Tool grid */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+      padding-bottom: 6rem;
+    }
+
+    .tool-card {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #E8E8E8;
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .tool-card:hover {
+      border-color: #A259FF;
+      box-shadow: 0 4px 16px rgba(162, 89, 255, 0.08);
+    }
+
+    .tool-card:hover h2 {
+      color: #A259FF;
+    }
+
+    .tool-icon {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 1rem;
+    }
+
+    .tool-card h2 {
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+      transition: color 0.3s ease;
+    }
+
+    .tool-card p {
+      font-size: 13px;
+      color: #777;
+      line-height: 1.5;
+    }
+
+    footer {
+      text-align: left;
+      padding: 2rem;
+      color: #999;
+      font-size: 12px;
+      background-color: #EFEFEF;
+    }
+
+    footer .container {
+      padding: 0 2rem;
+    }
+  </style>
 </head>
 <body>
+  <header>
     <h1>One Thing Done Well</h1>
-    <p>A collection of tools built agentically, each designed to do one thing and do it well, in the spirit of Unix utilities.</p>
-    <ul>
-        <li><a href="quickroom/">Quickroom - Nifty little room layout planner</a></li>
-    </ul>
+    <p>Small tools, each built to do one thing well.</p>
+  </header>
+
+  <div class="container">
+    <div class="tools-grid">
+      <a href="quickroom/" class="tool-card">
+        <img class="tool-icon" src="quickroom/icon.svg" alt="Quickroom icon">
+        <h2>Quickroom</h2>
+        <p>A nifty little room layout planner.</p>
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      One Thing Done Well
+    </div>
+  </footer>
 </body>
 </html>
