@@ -829,6 +829,16 @@ canvas.addEventListener('mousedown', (e) => {
       toggleItemSelection(id);
       return;
     }
+    // Clicking on a member of the current multi-selection: drag the whole group
+    if (state.selectedKind === 'multi' && state.selectedIds.includes(id)) {
+      const { x, y } = screenToCanvas(e.clientX, e.clientY);
+      const offsets = state.selectedIds.map(sid => {
+        const it = getItem(sid);
+        return { id: sid, offsetX: x - it.x, offsetY: y - it.y };
+      });
+      state.dragging = { kind: 'group', offsets };
+      return;
+    }
     selectItem(id);
     const item = getItem(id);
     if (!item) return;
@@ -873,7 +883,15 @@ window.addEventListener('mousemove', (e) => {
   }
   if (state.dragging) {
     const { x, y } = screenToCanvas(e.clientX, e.clientY);
-    if (state.dragging.kind === 'room') {
+    if (state.dragging.kind === 'group') {
+      for (const { id, offsetX, offsetY } of state.dragging.offsets) {
+        const it = getItem(id);
+        if (!it) continue;
+        it.x = x - offsetX;
+        it.y = y - offsetY;
+      }
+      renderFurniture();
+    } else if (state.dragging.kind === 'room') {
       const room = getRoom(state.dragging.id);
       if (!room) return;
       room.x = x - state.dragging.offsetX;
