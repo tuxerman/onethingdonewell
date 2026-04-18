@@ -1244,32 +1244,40 @@ $('#btn-save').addEventListener('click', () => {
   URL.revokeObjectURL(url);
 });
 
+function applyLayoutData(data) {
+  if (data.rooms) {
+    state.rooms = data.rooms.map((r, i) => ({ id: i + 1, x: r.x, y: r.y, w: r.w, h: r.h, label: r.label || `Room ${i + 1}` }));
+  } else if (data.room) {
+    state.rooms = [{ id: 1, x: 0, y: 0, w: data.room.w, h: data.room.h, label: 'Room 1' }];
+  }
+  const off = state.rooms.length;
+  state.items = (data.items || []).map((item, i) => ({
+    id: off + i + 1, type: item.type, x: item.x, y: item.y, w: item.w, h: item.h,
+    rotation: item.rotation || 0, text: item.text, fontSize: item.fontSize, label: item.label,
+  }));
+  state.nextId = off + state.items.length + 1;
+  state.selectedKind = null; state.selectedId = null;
+  if (data.layoutName) $('#layout-title').value = data.layoutName;
+  if (data.view) { state.zoom = data.view.zoom || 1; state.pan.x = data.view.panX || 0; state.pan.y = data.view.panY || 0; }
+  renderRooms(); renderFurniture(); renderViewport();
+}
+
 $('#btn-load').addEventListener('click', () => { $('#file-input').click(); });
 $('#file-input').addEventListener('change', (e) => {
   const file = e.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = (ev) => {
     try {
-      const data = JSON.parse(ev.target.result);
-      if (data.rooms) {
-        state.rooms = data.rooms.map((r, i) => ({ id: i + 1, x: r.x, y: r.y, w: r.w, h: r.h, label: r.label || `Room ${i + 1}` }));
-      } else if (data.room) {
-        state.rooms = [{ id: 1, x: 0, y: 0, w: data.room.w, h: data.room.h, label: 'Room 1' }];
-      }
-      const off = state.rooms.length;
-      state.items = (data.items || []).map((item, i) => ({
-        id: off + i + 1, type: item.type, x: item.x, y: item.y, w: item.w, h: item.h,
-        rotation: item.rotation || 0, text: item.text, fontSize: item.fontSize, label: item.label,
-      }));
-      state.nextId = off + state.items.length + 1;
-      state.selectedKind = null; state.selectedId = null;
-      if (data.layoutName) $('#layout-title').value = data.layoutName;
-      if (data.view) { state.zoom = data.view.zoom || 1; state.pan.x = data.view.panX || 0; state.pan.y = data.view.panY || 0; }
-      renderRooms(); renderFurniture(); renderViewport();
+      applyLayoutData(JSON.parse(ev.target.result));
     } catch (err) { alert('Could not load file: the JSON is in the wrong format.'); }
   };
   reader.readAsText(file);
   e.target.value = '';
+});
+
+$('#btn-example').addEventListener('click', () => {
+  if (typeof EXAMPLE_LAYOUT === 'undefined') { alert('Example layout not bundled.'); return; }
+  applyLayoutData(EXAMPLE_LAYOUT);
 });
 
 $('#btn-export').addEventListener('click', () => {
