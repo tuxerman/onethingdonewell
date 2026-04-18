@@ -61,12 +61,12 @@ function drawDesk(g, w, h) {
 }
 
 function drawBookshelf(g, w, h) {
+  // Top-down view: thin unit with a back panel and a shelf lip visible at the front
   g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
-  const sections = 4;
-  for (let i = 1; i < sections; i++) {
-    const x = (w / sections) * i;
-    g.appendChild(svgEl('line', { x1: x, y1: 0, x2: x, y2: h, stroke: ACCENT, 'stroke-width': 0.4 }));
-  }
+  // Back panel accent
+  g.appendChild(svgEl('line', { x1: 0, y1: 1.2, x2: w, y2: 1.2, stroke: ACCENT, 'stroke-width': 0.3 }));
+  // Front lip
+  g.appendChild(svgEl('line', { x1: 0, y1: h - 1.2, x2: w, y2: h - 1.2, stroke: ACCENT, 'stroke-width': 0.3 }));
 }
 
 function drawWC(g, w, h) {
@@ -92,24 +92,47 @@ function drawArrow(g, w, h) {
 }
 
 function drawSofa(g, w, h) {
-  g.appendChild(svgEl('rect', { x: 0, y: h * 0.2, width: w, height: h * 0.8, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
-  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h * 0.3, fill: FILL, stroke: STROKE, 'stroke-width': 0.4 }));
-  g.appendChild(svgEl('rect', { x: 0, y: h * 0.15, width: w * 0.08, height: h * 0.85, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
-  g.appendChild(svgEl('rect', { x: w * 0.92, y: h * 0.15, width: w * 0.08, height: h * 0.85, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
-  g.appendChild(svgEl('line', { x1: w * 0.33, y1: h * 0.3, x2: w * 0.33, y2: h, stroke: ACCENT, 'stroke-width': 0.3 }));
-  g.appendChild(svgEl('line', { x1: w * 0.66, y1: h * 0.3, x2: w * 0.66, y2: h, stroke: ACCENT, 'stroke-width': 0.3 }));
+  // Seat base
+  g.appendChild(svgEl('rect', { x: 0, y: h * 0.22, width: w, height: h * 0.78, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 2 }));
+  // Back cushion strip (sits between the armrests)
+  g.appendChild(svgEl('rect', { x: w * 0.09, y: 0, width: w * 0.82, height: h * 0.3, fill: FILL, stroke: STROKE, 'stroke-width': 0.45, rx: 1.2 }));
+  // Rounded armrests
+  g.appendChild(svgEl('rect', { x: 0, y: h * 0.14, width: w * 0.09, height: h * 0.86, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 1.5 }));
+  g.appendChild(svgEl('rect', { x: w * 0.91, y: h * 0.14, width: w * 0.09, height: h * 0.86, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 1.5 }));
+  // Three seat cushions
+  const cushY = h * 0.34, cushH = h * 0.6;
+  const cushStart = w * 0.11, cushEnd = w * 0.89;
+  const cushW = (cushEnd - cushStart) / 3;
+  for (let i = 0; i < 3; i++) {
+    g.appendChild(svgEl('rect', {
+      x: cushStart + i * cushW + 0.4, y: cushY,
+      width: cushW - 0.8, height: cushH,
+      fill: 'none', stroke: ACCENT, 'stroke-width': 0.3, rx: 0.8,
+    }));
+  }
 }
 
 function drawCoffeeTable(g, w, h) {
-  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
-  g.appendChild(svgEl('rect', { x: 1.5, y: 1.5, width: w - 3, height: h - 3, fill: 'none', stroke: ACCENT, 'stroke-width': 0.3 }));
+  // Slab
+  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 0.8 }));
+  // Inner tabletop inset (shelf/drawer outline)
+  g.appendChild(svgEl('rect', { x: 2, y: 2, width: w - 4, height: h - 4, fill: 'none', stroke: ACCENT, 'stroke-width': 0.3, rx: 0.5 }));
+  // Drawer pull
+  g.appendChild(svgEl('line', { x1: w / 2 - 3, y1: h - 3.2, x2: w / 2 + 3, y2: h - 3.2, stroke: ACCENT, 'stroke-width': 0.5 }));
 }
 
 function drawTVStand(g, w, h) {
-  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
-  g.appendChild(svgEl('line', { x1: 0, y1: h * 0.5, x2: w, y2: h * 0.5, stroke: ACCENT, 'stroke-width': 0.4 }));
-  g.appendChild(svgEl('line', { x1: w * 0.33, y1: h * 0.5, x2: w * 0.33, y2: h, stroke: ACCENT, 'stroke-width': 0.3 }));
-  g.appendChild(svgEl('line', { x1: w * 0.66, y1: h * 0.5, x2: w * 0.66, y2: h, stroke: ACCENT, 'stroke-width': 0.3 }));
+  // Long low console
+  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 0.5 }));
+  // Back-edge accent (wall side)
+  g.appendChild(svgEl('line', { x1: 0, y1: 1.2, x2: w, y2: 1.2, stroke: ACCENT, 'stroke-width': 0.3 }));
+  // Door/drawer divisions (3 sections)
+  g.appendChild(svgEl('line', { x1: w / 3, y1: 1.2, x2: w / 3, y2: h, stroke: ACCENT, 'stroke-width': 0.3 }));
+  g.appendChild(svgEl('line', { x1: 2 * w / 3, y1: 1.2, x2: 2 * w / 3, y2: h, stroke: ACCENT, 'stroke-width': 0.3 }));
+  // Handles on each door
+  for (const cx of [w / 6, w / 2, 5 * w / 6]) {
+    g.appendChild(svgEl('rect', { x: cx - 1.2, y: h - 3, width: 2.4, height: 0.9, fill: ACCENT, stroke: 'none', rx: 0.3 }));
+  }
 }
 
 function drawDiningTable(g, w, h) {
@@ -129,27 +152,35 @@ function drawDiningChair(g, w, h) {
 function drawOfficeChair(g, w, h) {
   g.appendChild(svgEl('ellipse', { cx: w / 2, cy: h * 0.55, rx: w / 2 - 0.5, ry: h * 0.4, fill: FILL, stroke: STROKE, 'stroke-width': 0.45 }));
   g.appendChild(svgEl('rect', { x: w * 0.15, y: 0, width: w * 0.7, height: h * 0.3, fill: FILL, stroke: STROKE, 'stroke-width': 0.4 }));
-  // const cx = w / 2, cy = h * 0.55;
-  // for (let i = 0; i < 5; i++) {
-  //   const angle = (i * 72 - 90) * Math.PI / 180;
-  //   const lx = cx + Math.cos(angle) * (w * 0.4);
-  //   const ly = cy + Math.sin(angle) * (h * 0.35);
-  //   g.appendChild(svgEl('line', { x1: cx, y1: cy, x2: lx, y2: ly, stroke: ACCENT, 'stroke-width': 0.3 }));
-  //   g.appendChild(svgEl('circle', { cx: lx, cy: ly, r: 0.8, fill: STROKE }));
-  // }
 }
 
-function drawMonitor(g, w, h) {
-  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h * 0.7, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
-  g.appendChild(svgEl('rect', { x: w * 0.4, y: h * 0.7, width: w * 0.2, height: h * 0.15, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
-  g.appendChild(svgEl('ellipse', { cx: w / 2, cy: h * 0.92, rx: w * 0.25, ry: h * 0.08, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
+function drawDrawerChest(g, w, h) {
+  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 0.5 }));
+  // Back edge
+  g.appendChild(svgEl('line', { x1: 0, y1: 1.2, x2: w, y2: 1.2, stroke: ACCENT, 'stroke-width': 0.3 }));
+  // Three drawer divisions (narrow chest — tall stack of drawers)
+  g.appendChild(svgEl('line', { x1: 0, y1: h * 0.4, x2: w, y2: h * 0.4, stroke: ACCENT, 'stroke-width': 0.3 }));
+  g.appendChild(svgEl('line', { x1: 0, y1: h * 0.7, x2: w, y2: h * 0.7, stroke: ACCENT, 'stroke-width': 0.3 }));
+  // Drawer handles
+  for (const cy of [h * 0.22, h * 0.55, h * 0.85]) {
+    g.appendChild(svgEl('rect', { x: w * 0.38, y: cy - 0.45, width: w * 0.24, height: 0.9, fill: ACCENT, stroke: 'none', rx: 0.3 }));
+  }
 }
 
 function drawNightstand(g, w, h) {
-  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5 }));
-  g.appendChild(svgEl('line', { x1: 0, y1: h * 0.5, x2: w, y2: h * 0.5, stroke: ACCENT, 'stroke-width': 0.4 }));
-  g.appendChild(svgEl('circle', { cx: w / 2, cy: h * 0.25, r: 0.5, fill: STROKE }));
-  g.appendChild(svgEl('circle', { cx: w / 2, cy: h * 0.75, r: 0.5, fill: STROKE }));
+  // Simple case with a single drawer front and a small handle
+  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 0.6 }));
+  // Back edge (wall side)
+  g.appendChild(svgEl('line', { x1: 0, y1: 1, x2: w, y2: 1, stroke: ACCENT, 'stroke-width': 0.3 }));
+  // Drawer line
+  g.appendChild(svgEl('line', { x1: 0, y1: h * 0.4, x2: w, y2: h * 0.4, stroke: ACCENT, 'stroke-width': 0.3 }));
+  // Handle
+  g.appendChild(svgEl('rect', { x: w * 0.35, y: h * 0.62, width: w * 0.3, height: 0.9, fill: ACCENT, stroke: 'none', rx: 0.3 }));
+}
+
+function drawSideTable(g, w, h) {
+  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: FILL, stroke: STROKE, 'stroke-width': 0.5, rx: 0.8 }));
+  g.appendChild(svgEl('rect', { x: 1.6, y: 1.6, width: w - 3.2, height: h - 3.2, fill: 'none', stroke: ACCENT, 'stroke-width': 0.3, rx: 0.4 }));
 }
 
 function drawWardrobe(g, w, h) {
@@ -159,11 +190,53 @@ function drawWardrobe(g, w, h) {
   g.appendChild(svgEl('circle', { cx: w * 0.55, cy: h / 2, r: 0.6, fill: STROKE }));
 }
 
+// Door conventions:
+//   Wall aligns with y = 0 (top edge of the item box).
+//   Frame panel sits on the wall; arc swings into the room (downward, y > 0).
+//   "Opens Right" = hinge on LEFT, door swings to the right.
+//   "Opens Left"  = hinge on RIGHT, door swings to the left.
+//   Swing arc is a proper quarter circle of radius R = min(w, h-baseH).
+//   snapToWall aligns the y=0 edge with the actual wall.
+function drawDoorKnobs(g, hingeX, baseH) {
+  const mw = 2.2, mh = 2.0;
+  // Two small rects straddling the wall bar at the other end of the hinge pivot
+  g.appendChild(svgEl('rect', { x: hingeX - mw / 2, y: -0.55, width: mw, height: mh, fill: STROKE, stroke: 'none', rx: 0.2 }));
+  g.appendChild(svgEl('rect', { x: hingeX - mw / 2, y: baseH - mh + 0.55, width: mw, height: mh, fill: STROKE, stroke: 'none', rx: 0.2 }));
+}
+
+// "Door (Opens Left)" — hinge on RIGHT, door swings left into the room.
 function drawDoor(g, w, h) {
+  const baseH = 2;
+  const R = Math.min(w, h - baseH);
   g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: 'transparent', stroke: 'none' }));
-  g.appendChild(svgEl('line', { x1: 0, y1: h, x2: 0, y2: 0, stroke: STROKE, 'stroke-width': 0.5 }));
-  g.appendChild(svgEl('path', { d: `M 0 0 A ${w} ${w} 0 0 1 ${w} ${h}`, fill: 'none', stroke: ACCENT, 'stroke-width': 0.5, 'stroke-dasharray': '2 1' }));
-  g.appendChild(svgEl('line', { x1: 0, y1: 0, x2: w, y2: h, stroke: STROKE, 'stroke-width': 0.5 }));
+  // Wall frame
+  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: baseH, fill: FILL, stroke: STROKE, 'stroke-width': 0.4 }));
+  // Knob marks on the free (non-hinge) end — left side
+  drawDoorKnobs(g, 3.2, baseH);
+  // Open door panel (perpendicular to wall, hanging down from hinge on right)
+  g.appendChild(svgEl('line', { x1: w, y1: baseH, x2: w, y2: baseH + R, stroke: STROKE, 'stroke-width': 0.8 , 'stroke-dasharray': '2 1.2'}));
+  // Quarter-circle swing arc: from open-door tip back to closed position along the wall (SW of hinge)
+  g.appendChild(svgEl('path', {
+    d: `M ${w} ${baseH + R} A ${R} ${R} 0 0 1 ${w - R} ${baseH}`,
+    fill: 'none', stroke: STROKE, 'stroke-width': 0.4, 'stroke-dasharray': '2 1.2',
+  }));
+}
+
+// "Door (Opens Right)" — hinge on LEFT, door swings right into the room.
+function drawDoorRight(g, w, h) {
+  const baseH = 2;
+  const R = Math.min(w, h - baseH);
+  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: h, fill: 'transparent', stroke: 'none' }));
+  g.appendChild(svgEl('rect', { x: 0, y: 0, width: w, height: baseH, fill: FILL, stroke: STROKE, 'stroke-width': 0.4 }));
+  // Knob marks on the free (non-hinge) end — right side
+  drawDoorKnobs(g, w - 3.2, baseH);
+  // Open door panel hanging off the left hinge
+  g.appendChild(svgEl('line', { x1: 0, y1: baseH, x2: 0, y2: baseH + R, stroke: STROKE, 'stroke-width': 0.8, 'stroke-dasharray': '2 1.2' }));
+  // Quarter-circle swing arc (SE of hinge)
+  g.appendChild(svgEl('path', {
+    d: `M 0 ${baseH + R} A ${R} ${R} 0 0 0 ${R} ${baseH}`,
+    fill: 'none', stroke: STROKE, 'stroke-width': 0.4, 'stroke-dasharray': '2 1.2',
+  }));
 }
 
 function drawWindow(g, w, h) {
@@ -178,10 +251,12 @@ const DRAW_FNS = {
   bookshelf: drawBookshelf, wc: drawWC, rectangle: drawRectangle,
   oval: drawOval, line: drawLine, arrow: drawArrow,
   sofa: drawSofa, coffeetable: drawCoffeeTable, tvstand: drawTVStand,
+  sidetable: drawSideTable,
   diningtable: drawDiningTable, diningchair: drawDiningChair,
-  officechair: drawOfficeChair, monitor: drawMonitor,
+  officechair: drawOfficeChair, 
   nightstand: drawNightstand, wardrobe: drawWardrobe,
-  door: drawDoor, window: drawWindow,
+  drawerchest: drawDrawerChest,
+  door: drawDoor, doorright: drawDoorRight, window: drawWindow,
 };
 
 // ─── Furniture Definitions (inches) ──────────────────────────────────
@@ -199,13 +274,14 @@ const FURNITURE_DEFS = {
   sofa:        { w: 84, h: 36,  label: 'Sofa' },         // ~7ft sofa, 36" deep
   coffeetable: { w: 48, h: 24,  label: 'Coffee Table' }, // IKEA LACK 48×24"
   tvstand:     { w: 59, h: 16,  label: 'TV Stand' },     // IKEA BESTÅ 59×16"
+  sidetable:   { w: 18, h: 18,  label: 'Side Table' },   // End table
   diningtable: { w: 63, h: 35,  label: 'Dining Table' }, // IKEA EKEDALEN 63×35"
   diningchair: { w: 17, h: 17,  label: 'Dining Chair' }, // Standard 17×17"
   officechair: { w: 22, h: 22,  label: 'Office Chair' }, // Standard swivel
-  monitor:     { w: 24, h: 10,  label: 'Monitor' },      // 24" monitor footprint
-  nightstand:  { w: 16, h: 16,  label: 'Nightstand' },   // IKEA MALM 16×16"
+  nightstand:  { w: 18, h: 16,  label: 'Nightstand' },   // IKEA MALM-style
   wardrobe:    { w: 60, h: 24,  label: 'Wardrobe' },     // IKEA PAX 60×24"
-  door:        { w: 32, h: 32,  label: 'Door' },         // Standard 32" door swing
+  door:        { w: 32, h: 34,  label: 'Door (Opens Left)' },
+  doorright:   { w: 32, h: 34,  label: 'Door (Opens Right)' },
   window:      { w: 36, h: 4,   label: 'Window' },       // 36" wide, thin for wall
   text:        { w: 36, h: 12,  label: 'Text' },
   arrow:       { w: 48, h: 4,   label: 'Arrow' },
@@ -747,7 +823,8 @@ function snapRoom(room) {
 // ─── Wall Snapping for Doors & Windows ──────────────────────────────
 
 function snapToWall(item) {
-  if (item.type !== 'door' && item.type !== 'window') return;
+  const isDoor = item.type === 'door' || item.type === 'doorright';
+  if (!isDoor && item.type !== 'window') return;
   const sd = SNAP_DISTANCE;
   let bestDist = sd;
   let bestSnap = null;
@@ -755,30 +832,38 @@ function snapToWall(item) {
   const cx = item.x + item.w / 2;
   const cy = item.y + item.h / 2;
 
+  // Windows straddle the wall (centered). Doors sit fully inside the room with
+  // their natural y=0 edge on the wall. Distance checks mirror the final snap:
+  // windows measured from center, doors from the wall-adjacent edge — otherwise
+  // the door appears to ignore the wall until its center crosses it.
   for (const room of state.rooms) {
     // Top wall
-    let d = Math.abs(cy - room.y);
+    let probe = isDoor ? item.y : cy;
+    let d = Math.abs(probe - room.y);
     if (d < bestDist && cx >= room.x - sd && cx <= room.x + room.w + sd) {
       bestDist = d;
-      bestSnap = { y: room.y - item.h / 2, rotation: 0, wallAxis: 'h' };
+      bestSnap = { y: isDoor ? room.y : room.y - item.h / 2, rotation: 0, wallAxis: 'h' };
     }
     // Bottom wall
-    d = Math.abs(cy - (room.y + room.h));
+    probe = isDoor ? item.y + item.h : cy;
+    d = Math.abs(probe - (room.y + room.h));
     if (d < bestDist && cx >= room.x - sd && cx <= room.x + room.w + sd) {
       bestDist = d;
-      bestSnap = { y: room.y + room.h - item.h / 2, rotation: 180, wallAxis: 'h' };
+      bestSnap = { y: isDoor ? room.y + room.h - item.h : room.y + room.h - item.h / 2, rotation: 180, wallAxis: 'h' };
     }
     // Left wall
-    d = Math.abs(cx - room.x);
+    probe = isDoor ? item.x : cx;
+    d = Math.abs(probe - room.x);
     if (d < bestDist && cy >= room.y - sd && cy <= room.y + room.h + sd) {
       bestDist = d;
-      bestSnap = { x: room.x - item.w / 2, rotation: 270, wallAxis: 'v' };
+      bestSnap = { x: isDoor ? room.x : room.x - item.w / 2, rotation: 270, wallAxis: 'v' };
     }
     // Right wall
-    d = Math.abs(cx - (room.x + room.w));
+    probe = isDoor ? item.x + item.w : cx;
+    d = Math.abs(probe - (room.x + room.w));
     if (d < bestDist && cy >= room.y - sd && cy <= room.y + room.h + sd) {
       bestDist = d;
-      bestSnap = { x: room.x + room.w - item.w / 2, rotation: 90, wallAxis: 'v' };
+      bestSnap = { x: isDoor ? room.x + room.w - item.w : room.x + room.w - item.w / 2, rotation: 90, wallAxis: 'v' };
     }
   }
 
@@ -1152,7 +1237,10 @@ $('#btn-save').addEventListener('click', () => {
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const filename = titleVal.replace(/[/\\?%*:|"<>]/g, '-') || 'room-layout';
-  const a = document.createElement('a'); a.href = url; a.download = filename + '.json'; a.click();
+  const d = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const ts = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+  const a = document.createElement('a'); a.href = url; a.download = `${filename}_${ts}.json`; a.click();
   URL.revokeObjectURL(url);
 });
 

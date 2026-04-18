@@ -32,7 +32,7 @@
   <div id="main">
     <!-- Left Sidebar: Furniture Palette -->
     <aside id="sidebar">
-      <h3>Furniture</h3>
+      <h3>Add Items</h3>
 
       <div class="palette-section">
         <h4>Rooms</h4>
@@ -58,13 +58,25 @@
             <span>Bed</span>
           </div>
           <div class="palette-item" data-type="nightstand" draggable="true">
-            <svg viewBox="0 0 40 40" class="palette-svg">
-              <rect x="2" y="2" width="36" height="36" fill="white" stroke="black" stroke-width="1.5" rx="1"/>
-              <line x1="2" y1="20" x2="38" y2="20" stroke="black" stroke-width="0.8"/>
-              <circle cx="20" cy="10" r="1.5" fill="black"/>
-              <circle cx="20" cy="30" r="1.5" fill="black"/>
+            <svg viewBox="0 0 40 36" class="palette-svg">
+              <rect x="2" y="2" width="36" height="32" fill="white" stroke="black" stroke-width="1.5" rx="1.5"/>
+              <line x1="2" y1="6" x2="38" y2="6" stroke="black" stroke-width="0.6"/>
+              <line x1="2" y1="16" x2="38" y2="16" stroke="black" stroke-width="0.6"/>
+              <rect x="15" y="24" width="10" height="2" fill="black" rx="0.5"/>
             </svg>
             <span>Nightstand</span>
+          </div>
+          <div class="palette-item" data-type="drawerchest" draggable="true">
+            <svg viewBox="0 0 50 30" class="palette-svg">
+              <rect x="1" y="1" width="48" height="28" fill="white" stroke="black" stroke-width="1.5" rx="1"/>
+              <line x1="1" y1="4" x2="49" y2="4" stroke="black" stroke-width="0.5"/>
+              <line x1="1" y1="12" x2="49" y2="12" stroke="black" stroke-width="0.6"/>
+              <line x1="1" y1="20" x2="49" y2="20" stroke="black" stroke-width="0.6"/>
+              <rect x="20" y="7" width="10" height="1.4" fill="black" rx="0.3"/>
+              <rect x="20" y="15" width="10" height="1.4" fill="black" rx="0.3"/>
+              <rect x="20" y="24" width="10" height="1.4" fill="black" rx="0.3"/>
+            </svg>
+            <span>Drawer Chest</span>
           </div>
           <div class="palette-item" data-type="wardrobe" draggable="true">
             <svg viewBox="0 0 60 30" class="palette-svg">
@@ -83,10 +95,13 @@
         <div class="palette-grid">
           <div class="palette-item" data-type="sofa" draggable="true">
             <svg viewBox="0 0 70 35" class="palette-svg">
-              <rect x="1" y="8" width="68" height="26" fill="white" stroke="black" stroke-width="1.5" rx="2"/>
-              <rect x="1" y="1" width="68" height="10" fill="white" stroke="black" stroke-width="1" rx="2"/>
-              <line x1="24" y1="10" x2="24" y2="34" stroke="black" stroke-width="0.5"/>
-              <line x1="47" y1="10" x2="47" y2="34" stroke="black" stroke-width="0.5"/>
+              <rect x="1" y="8" width="68" height="26" fill="white" stroke="black" stroke-width="1.5" rx="2.5"/>
+              <rect x="7" y="1" width="56" height="10" fill="white" stroke="black" stroke-width="1" rx="1.5"/>
+              <rect x="1" y="5" width="6" height="29" fill="white" stroke="black" stroke-width="1.2" rx="2"/>
+              <rect x="63" y="5" width="6" height="29" fill="white" stroke="black" stroke-width="1.2" rx="2"/>
+              <rect x="9" y="13" width="17" height="19" fill="none" stroke="black" stroke-width="0.5" rx="1"/>
+              <rect x="27" y="13" width="17" height="19" fill="none" stroke="black" stroke-width="0.5" rx="1"/>
+              <rect x="45" y="13" width="17" height="19" fill="none" stroke="black" stroke-width="0.5" rx="1"/>
             </svg>
             <span>Sofa</span>
           </div>
@@ -94,17 +109,36 @@
             <svg viewBox="0 0 60 30" class="palette-svg">
               <rect x="1" y="1" width="58" height="28" fill="white" stroke="black" stroke-width="1.5" rx="2"/>
               <rect x="4" y="4" width="52" height="22" fill="none" stroke="black" stroke-width="0.5" rx="1"/>
+              <line x1="25" y1="24" x2="35" y2="24" stroke="black" stroke-width="0.8"/>
             </svg>
             <span>Coffee Table</span>
           </div>
           <div class="palette-item" data-type="tvstand" draggable="true">
             <svg viewBox="0 0 70 20" class="palette-svg">
               <rect x="1" y="1" width="68" height="18" fill="white" stroke="black" stroke-width="1.5" rx="1"/>
-              <line x1="1" y1="10" x2="69" y2="10" stroke="black" stroke-width="0.6"/>
-              <line x1="24" y1="10" x2="24" y2="19" stroke="black" stroke-width="0.5"/>
-              <line x1="46" y1="10" x2="46" y2="19" stroke="black" stroke-width="0.5"/>
+              <line x1="1" y1="4" x2="69" y2="4" stroke="black" stroke-width="0.5"/>
+              <line x1="24" y1="4" x2="24" y2="19" stroke="black" stroke-width="0.5"/>
+              <line x1="46" y1="4" x2="46" y2="19" stroke="black" stroke-width="0.5"/>
+              <rect x="9" y="13" width="6" height="1.2" fill="black" rx="0.3"/>
+              <rect x="32" y="13" width="6" height="1.2" fill="black" rx="0.3"/>
+              <rect x="55" y="13" width="6" height="1.2" fill="black" rx="0.3"/>
             </svg>
             <span>TV Stand</span>
+          </div>
+          <div class="palette-item" data-type="bookshelf" draggable="true">
+            <svg viewBox="0 0 60 20" class="palette-svg">
+              <rect x="1" y="1" width="58" height="18" fill="white" stroke="black" stroke-width="1.5" rx="1"/>
+              <line x1="1" y1="4" x2="59" y2="4" stroke="black" stroke-width="0.5"/>
+              <line x1="1" y1="16" x2="59" y2="16" stroke="black" stroke-width="0.5"/>
+            </svg>
+            <span>Bookshelf</span>
+          </div>
+          <div class="palette-item" data-type="sidetable" draggable="true">
+            <svg viewBox="0 0 40 40" class="palette-svg">
+              <rect x="2" y="2" width="36" height="36" fill="white" stroke="black" stroke-width="1.5" rx="2"/>
+              <rect x="6" y="6" width="28" height="28" fill="none" stroke="black" stroke-width="0.5" rx="1"/>
+            </svg>
+            <span>Side Table</span>
           </div>
           <div class="palette-item" data-type="chair" draggable="true">
             <svg viewBox="0 0 40 40" class="palette-svg">
@@ -146,7 +180,7 @@
       </div>
 
       <div class="palette-section">
-        <h4>WFH Station</h4>
+        <h4>Home Office</h4>
         <div class="palette-grid">
           <div class="palette-item" data-type="desk" draggable="true">
             <svg viewBox="0 0 80 40" class="palette-svg">
@@ -161,23 +195,6 @@
               <rect x="8" y="2" width="24" height="10" fill="white" stroke="black" stroke-width="1" rx="3"/>
             </svg>
             <span>Office Chair</span>
-          </div>
-          <div class="palette-item" data-type="monitor" draggable="true">
-            <svg viewBox="0 0 60 40" class="palette-svg">
-              <rect x="5" y="2" width="50" height="28" fill="white" stroke="black" stroke-width="1.5" rx="1"/>
-              <rect x="24" y="30" width="12" height="4" fill="white" stroke="black" stroke-width="0.8"/>
-              <ellipse cx="30" cy="37" rx="10" ry="3" fill="white" stroke="black" stroke-width="0.8"/>
-            </svg>
-            <span>Monitor</span>
-          </div>
-          <div class="palette-item" data-type="bookshelf" draggable="true">
-            <svg viewBox="0 0 60 20" class="palette-svg">
-              <rect x="1" y="1" width="58" height="18" fill="white" stroke="black" stroke-width="1.5" rx="1"/>
-              <line x1="15" y1="1" x2="15" y2="19" stroke="black" stroke-width="0.6"/>
-              <line x1="30" y1="1" x2="30" y2="19" stroke="black" stroke-width="0.6"/>
-              <line x1="45" y1="1" x2="45" y2="19" stroke="black" stroke-width="0.6"/>
-            </svg>
-            <span>Bookshelf</span>
           </div>
         </div>
       </div>
@@ -201,11 +218,23 @@
         <div class="palette-grid">
           <div class="palette-item" data-type="door" draggable="true">
             <svg viewBox="0 0 40 40" class="palette-svg">
-              <line x1="2" y1="38" x2="2" y2="2" stroke="black" stroke-width="1.5"/>
-              <path d="M 2 2 A 36 36 0 0 1 38 38" fill="none" stroke="black" stroke-width="1" stroke-dasharray="3 2"/>
-              <line x1="2" y1="2" x2="38" y2="38" stroke="black" stroke-width="1"/>
+              <rect x="2" y="34" width="36" height="4" fill="white" stroke="black" stroke-width="1"/>
+              <rect x="4" y="33" width="1.7" height="1.4" fill="black"/>
+              <rect x="4" y="37.6" width="1.7" height="1.4" fill="black"/>
+              <line x1="36" y1="2" x2="36" y2="34" stroke="black" stroke-width="2"/>
+              <path d="M 36 2 A 32 32 0 0 0 4 34" fill="none" stroke="black" stroke-width="1" stroke-dasharray="3 2"/>
             </svg>
-            <span>Door</span>
+            <span>Door (Opens Left)</span>
+          </div>
+          <div class="palette-item" data-type="doorright" draggable="true">
+            <svg viewBox="0 0 40 40" class="palette-svg">
+              <rect x="2" y="34" width="36" height="4" fill="white" stroke="black" stroke-width="1"/>
+              <rect x="34.3" y="33" width="1.7" height="1.4" fill="black"/>
+              <rect x="34.3" y="37.6" width="1.7" height="1.4" fill="black"/>
+              <line x1="4" y1="2" x2="4" y2="34" stroke="black" stroke-width="2"/>
+              <path d="M 4 2 A 32 32 0 0 1 36 34" fill="none" stroke="black" stroke-width="1" stroke-dasharray="3 2"/>
+            </svg>
+            <span>Door (Opens Right)</span>
           </div>
           <div class="palette-item" data-type="window" draggable="true">
             <svg viewBox="0 0 60 12" class="palette-svg">
